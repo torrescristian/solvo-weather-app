@@ -1,30 +1,34 @@
-import { Box } from "@mui/material";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Navbar from "./pages/Login/Navbar";
+import { Box } from '@mui/material';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import RequireAuth from './components/RequiredAuth';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import Navbar from './pages/Login/Navbar';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Login />,
   },
   {
-    path: "/dashboard",
-    element: <Dashboard />,
+    path: '/dashboard',
+    element: (
+      <RequireAuth>
+        <Dashboard />
+      </RequireAuth>
+    ),
   },
 ]);
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <Box>
-      <Navbar />
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-    </Box>
-  )
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
