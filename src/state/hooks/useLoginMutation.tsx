@@ -1,4 +1,4 @@
-import { QueryClient, useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { getConnectedKey, IConnectedResult } from './useConnected';
 
@@ -12,10 +12,9 @@ export const MOCK_USER: ILoginProps = {
   password: 'admin',
 };
 
-const queryClient = new QueryClient()
-
 export default function useLoginMutation() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return useMutation(
     async ({ email, password }: ILoginProps): Promise<void> => {

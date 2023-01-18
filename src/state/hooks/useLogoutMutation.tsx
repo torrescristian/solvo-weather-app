@@ -1,11 +1,10 @@
-import { QueryClient, useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { getConnectedKey, IConnectedResult } from "./useConnected";
 
-const queryClient = new QueryClient()
-
 export default function useLogoutMutation() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return useMutation(async (): Promise<void> => {
     localStorage.setItem(

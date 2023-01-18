@@ -6,9 +6,9 @@ Bonus question: Make this an offline app in case the browser is not connected to
 
 ---
 
-- [ ] Login System
-- [ ] Search prompt by zip code or name
-- [ ] Favorite city
+- [x] Login System
+- [x] Search prompt by zip code or name
+- [ ] Favorite city and create the a checker monitor the temperature
 - [ ] Add alert and notification when temperatures reaches lower or upper temperatures than provided.
-- [ ] Set alert into multiple cities
+- [ ] Set alert to multiple cities
 - [ ] BONUS: Make this app work offline
