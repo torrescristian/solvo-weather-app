@@ -52,11 +52,11 @@ export default function WeatherCard({ weather }: IProps) {
   const toggleFavoriteMutation = useToggleFavoriteMutation();
 
   const handleClickFavorite = () => {
-    toggleFavoriteMutation.mutate(weather!);
+    toggleFavoriteMutation.mutate({ lat, lon });
   };
 
   return !name ? null : (
-    <Paper elevation={3} sx={{ width: '30rem', marginX: 'auto', p: '2rem' }}>
+    <Paper elevation={3} sx={{ width: '25rem', marginX: 'auto', p: 4, marginY: 2 }}>
       <Grid container>
         <Grid item xs={6}>
           <Typography variant="h2">{formatTemp(temp)}ºC</Typography>
@@ -66,10 +66,10 @@ export default function WeatherCard({ weather }: IProps) {
         </Grid>
         <Grid item xs={5}>
           <Typography variant="h6" color="red">
-            max {formatTemp(temp_max)}ºC
+            max {formatTemp(temp_max)}℃
           </Typography>
           <Typography variant="h6" color="blue">
-            min {formatTemp(temp_min)}ºC
+            min {formatTemp(temp_min)}℃
           </Typography>
           <Typography variant="h6" color="cyan">
             humidity {humidity}%

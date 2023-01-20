@@ -1,6 +1,7 @@
 import { AppBar, Toolbar, Typography } from '@mui/material';
 import useConnected from '../../state/hooks/useConnected';
-import Logout from './Logout';
+import DashboardNavButton from './DashboardNavButton';
+import LogoutNavButton from './LogoutNavButton';
 
 export default function Navbar() {
   const { isConnected } = useConnected();
@@ -11,7 +12,8 @@ export default function Navbar() {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Weather App
         </Typography>
-        {isConnected && <Logout />}
+        {isConnected && <DashboardNavButton />}
+        {isConnected && <LogoutNavButton />}
       </Toolbar>
     </AppBar>
   );

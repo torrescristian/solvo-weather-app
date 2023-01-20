@@ -34,15 +34,15 @@ export default async function fetchGeocoding({
   const url = queryIsZipCode ? createUrlByZipCode() : createUrlByCityName();
 
   // TODO: uncomment
-  // let response = await fetch(url).then((res) => res.json());
+  let response = await fetch(url).then((res) => res.json());
 
-  let response: any = {
-    zip: '5000',
-    name: 'Cordoba',
-    lat: -31.425,
-    lon: -64.175,
-    country: 'AR',
-  };
+  // let response: any = {
+  //   zip: '5000',
+  //   name: 'Cordoba',
+  //   lat: -31.425,
+  //   lon: -64.175,
+  //   country: 'AR',
+  // };
 
   response = Array.isArray(response) ? response[0] : response;
 

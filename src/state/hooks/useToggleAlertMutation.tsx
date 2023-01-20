@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from 'react-query';
 import ICoordinates from '../interfaces/ICoordinates';
 import useFavoriteCitiesQuery, {
-  getFavoriteCitiesKey, IFavorite,
+  getFavoriteCitiesKey,
 } from './useFavoriteCitiesQuery';
 
-export default function useToggleFavoriteMutation() {
+export default function useToggleAlertMutation() {
   const favoriteCities = useFavoriteCitiesQuery();
   const queryClient = useQueryClient();
 
@@ -12,13 +12,11 @@ export default function useToggleFavoriteMutation() {
 
     if (!favoriteCities.data) return;
 
-    const found = favoriteCities.data.find(
-      (fc) => fc.lat === lat && fc.lon === lon
+    const newFavoriteCities = favoriteCities.data.map((fc) =>
+      fc.lat === lat && fc.lon === lon
+        ? { ...fc, alertEnabled: !fc.alertEnabled }
+        : fc
     );
-
-    const newFavoriteCities: IFavorite[] = found
-      ? favoriteCities.data.filter((fc) => fc.lat !== lat && fc.lon !== lon)
-      : [...favoriteCities.data, { lat, lon, alertEnabled: false }];
 
     localStorage.setItem(
       getFavoriteCitiesKey(),

@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import useLogoutMutation from '../../state/hooks/useLogoutMutation';
 
-export default function Logout() {
+export default function LogoutNavButton() {
   const logoutMutation = useLogoutMutation();
   
   const handleClick = () => {

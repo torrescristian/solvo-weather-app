@@ -1,9 +1,10 @@
-import { Paper } from '@mui/material';
+import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
+
 import useFavoriteCitiesQuery from '../../../state/hooks/useFavoriteCitiesQuery';
 import IWeather from '../../../state/interfaces/IWeather';
 import fetchWeather from '../../../state/services/fetchWeather';
-import WeatherCard from './WeatherCard';
+import FavoriteWeatherCard from './FavoriteWeatherCard';
 
 export default function FavoriteCitiesList() {
   const fcq = useFavoriteCitiesQuery();
@@ -22,10 +23,10 @@ export default function FavoriteCitiesList() {
   }, [fcq.data]);
 
   return (
-    <Paper elevation={2} sx={{ p: 2, m: 3 }}>
-      {weathers.map((w) => (
-        <WeatherCard key={[w.coord.lat, w.coord.lon].join('-')} weather={w} />
+    <Box sx={{ p: 2, m: 3, display: 'flex', height: '150px', overflowX: 'scroll' }}>
+      {weathers.map((w, index) => (
+        <FavoriteWeatherCard key={[w.coord.lat, w.coord.lon, index].join('-')} weather={w} />
       ))}
-    </Paper>
+    </Box>
   );
 }

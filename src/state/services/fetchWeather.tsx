@@ -8,8 +8,8 @@ export default async function fetchWeather({ lat, lon }: ICoordinates): Promise<
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`;
 
   // TODO: uncomment
-  // return fetch(url).then((res) => res.json());
-  return mock();
+  return fetch(url).then((res) => res.json());
+  // return mock();
 }
 
 function mock() {
