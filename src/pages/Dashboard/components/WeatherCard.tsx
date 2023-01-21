@@ -59,7 +59,7 @@ export default function WeatherCard({ weather }: IProps) {
     <Paper elevation={3} sx={{ width: '25rem', marginX: 'auto', p: 4, marginY: 2 }}>
       <Grid container>
         <Grid item xs={6}>
-          <Typography variant="h2">{formatTemp(temp)}ºC</Typography>
+          <Typography variant="h2">{formatTemp(temp)}℃</Typography>
           <Typography>
             {name}, {country}
           </Typography>

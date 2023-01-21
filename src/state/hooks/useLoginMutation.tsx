@@ -28,12 +28,12 @@ export default function useLoginMutation() {
           isConnected: true,
         } as IConnectedResult)
       );
-
-      setTimeout(() => {
+    },
+    {
+      onSuccess: () =>
         queryClient.invalidateQueries(getConnectedKey()).then(() => {
           navigate('/dashboard');
-        });
-      }, 1000);
+        }),
     }
   );
 }

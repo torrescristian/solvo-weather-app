@@ -97,7 +97,7 @@ export default function FavoriteWeatherCard({ weather }: IProps) {
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h4">{formatTemp(temp)}ºC</Typography>
+          <Typography variant="h4">{formatTemp(temp)}℃</Typography>
           <Typography>
             {name}, {country}
           </Typography>

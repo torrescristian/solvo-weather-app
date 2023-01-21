@@ -1,5 +1,6 @@
 import { AppBar, Toolbar, Typography } from '@mui/material';
 import useConnected from '../../state/hooks/useConnected';
+import AlertMenuButton from './AlertMenuButton';
 import DashboardNavButton from './DashboardNavButton';
 import LogoutNavButton from './LogoutNavButton';
 
@@ -14,6 +15,7 @@ export default function Navbar() {
         </Typography>
         {isConnected && <DashboardNavButton />}
         {isConnected && <LogoutNavButton />}
+        {isConnected && <AlertMenuButton />}
       </Toolbar>
     </AppBar>
   );

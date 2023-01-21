@@ -18,6 +18,7 @@ import useAlertQuery, {
   operators,
 } from '../../../state/hooks/useAlertQuery';
 import useAlertMutation from '../../../state/hooks/useAlertMutation';
+import { formatOperator } from '../../../state/utils';
 
 export default function AlertForm() {
   const [enableUpdate, setEnableUpdate] = useState(false);
@@ -50,7 +51,6 @@ export default function AlertForm() {
   watch();
 
   const handleClickSubmit = (data: IAlert) => {
-    console.log('mutate', data);
     alertMutation.mutate(data);
   };
 
@@ -65,8 +65,6 @@ export default function AlertForm() {
 
     setValue('operator', operator);
     setValue('temperature', temperature);
-
-    console.log({ operator, temperature });
   }, [
     alertQuery.isSuccess,
     alertQuery.data?.operator,
@@ -86,7 +84,7 @@ export default function AlertForm() {
           {!enableUpdate &&
             getValues().operator &&
             getValues().temperature &&
-            getValues().operator.split('_').join(' ') +
+            formatOperator(getValues().operator) +
               ' ' +
               getValues().temperature +
               '℃'}
@@ -111,7 +109,7 @@ export default function AlertForm() {
               >
                 {operators.map((op) => (
                   <MenuItem key={op} value={op}>
-                    {op.split('_').join(' ')}
+                    {formatOperator(op)}
                   </MenuItem>
                 ))}
               </Select>

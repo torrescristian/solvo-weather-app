@@ -8,21 +8,23 @@ export default function useToggleAlertMutation() {
   const favoriteCities = useFavoriteCitiesQuery();
   const queryClient = useQueryClient();
 
-  return useMutation(async ({ lat, lon }: ICoordinates) => {
+  return useMutation(
+    async ({ lat, lon }: ICoordinates) => {
+      if (!favoriteCities.data) return;
 
-    if (!favoriteCities.data) return;
+      const newFavoriteCities = favoriteCities.data.map((fc) =>
+        fc.lat === lat && fc.lon === lon
+          ? { ...fc, alertEnabled: !fc.alertEnabled }
+          : fc
+      );
 
-    const newFavoriteCities = favoriteCities.data.map((fc) =>
-      fc.lat === lat && fc.lon === lon
-        ? { ...fc, alertEnabled: !fc.alertEnabled }
-        : fc
-    );
-
-    localStorage.setItem(
-      getFavoriteCitiesKey(),
-      JSON.stringify(newFavoriteCities)
-    );
-
-    queryClient.invalidateQueries(getFavoriteCitiesKey());
-  });
+      localStorage.setItem(
+        getFavoriteCitiesKey(),
+        JSON.stringify(newFavoriteCities)
+      );
+    },
+    {
+      onSuccess: () => queryClient.invalidateQueries(getFavoriteCitiesKey()),
+    }
+  );
 }
