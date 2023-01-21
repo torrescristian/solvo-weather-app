@@ -7,7 +7,6 @@ import useFavoriteCitiesQuery from '../../state/hooks/useFavoriteCitiesQuery';
 import useAlertQuery from '../../state/hooks/useAlertQuery';
 import useFavoriteCitiesWeatherQuery from '../../state/hooks/useFavoriteCitiesWeatherQuery';
 import { formatOperator, formatTemp } from '../../state/utils';
-import { useQueryClient } from 'react-query';
 
 export default function AlertMenuButton() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -17,7 +16,6 @@ export default function AlertMenuButton() {
   const alertQuery = useAlertQuery();
   const [alerts, setAlerts] = useState<string[]>([]);
   const [myInterval, setMyInterval] = useState<number>(0);
-  const queryClient = useQueryClient();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -63,7 +61,7 @@ export default function AlertMenuButton() {
   };
 
   useEffect(() => {
-    if (!fcq.isSuccess || !fcwq.isSuccess) return;
+    if (!alertQuery.data) return;
     
     if (myInterval) {
       clearInterval(myInterval);
@@ -71,12 +69,12 @@ export default function AlertMenuButton() {
 
     const _interval = setInterval(() => {
       updateAlertsNotifications();
-    }, 5000) // 5 sec
+    }, alertQuery.data.checkFrequency)
 
     setMyInterval(_interval);
     
     return clearInterval(myInterval);
-  }, [fcwq.data, fcq.data]);
+  }, [fcwq.data, fcq.data, alertQuery.data]);
 
   return (
     <>

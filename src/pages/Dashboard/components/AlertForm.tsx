@@ -1,6 +1,7 @@
 import {
   Button,
   FormControl,
+  Grid,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -30,6 +31,12 @@ export default function AlertForm() {
     .object({
       operator: yup.string().oneOf(operators).required(),
       temperature: yup.number().lessThan(100).moreThan(-100).required(),
+      checkFrequency: yup
+        .number()
+        .integer()
+        .moreThan(0)
+        .lessThan(Number.MAX_SAFE_INTEGER)
+        .required(),
     })
     .required();
 
@@ -42,15 +49,13 @@ export default function AlertForm() {
     watch,
   } = useForm<IAlert>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      operator: alertQuery.data?.operator,
-      temperature: alertQuery.data?.temperature,
-    },
   });
 
   watch();
 
   const handleClickSubmit = (data: IAlert) => {
+    handleClickToggleEnableUpdate();
+
     alertMutation.mutate(data);
   };
 
@@ -61,86 +66,131 @@ export default function AlertForm() {
   useEffect(() => {
     if (!alertQuery.isSuccess) return;
 
-    const { operator, temperature } = alertQuery.data;
+    const { operator, temperature, checkFrequency } = alertQuery.data;
+
+    console.log(alertQuery.data);
 
     setValue('operator', operator);
     setValue('temperature', temperature);
-  }, [
-    alertQuery.isSuccess,
-    alertQuery.data?.operator,
-    alertQuery.data?.temperature,
-  ]);
+    setValue('checkFrequency', checkFrequency);
+  }, [alertQuery.data]);
 
-  return (
-    <form onSubmit={handleSubmit(handleClickSubmit)}>
+  const CompleteText = () => {
+    if (enableUpdate) return null;
+
+    const { operator, checkFrequency, temperature } = getValues();
+
+    if (!operator || !temperature || !checkFrequency) return null;
+
+    return (
+      <Typography>
+        Notify every {checkFrequency / 1000} seconds when a favorite city is{' '}
+        {formatOperator(operator)} {temperature} ℃
+      </Typography>
+    );
+  };
+
+  if (!enableUpdate)
+    return (
       <Stack
         flexDirection="row"
         sx={{ marginX: 'auto' }}
         alignItems="center"
         justifyContent="center"
       >
-        <Typography>
-          Notify when temperature is{' '}
-          {!enableUpdate &&
-            getValues().operator &&
-            getValues().temperature &&
-            formatOperator(getValues().operator) +
-              ' ' +
-              getValues().temperature +
-              '℃'}
-        </Typography>
-
-        {enableUpdate && (
-          <>
-            <FormControl
-              sx={{
-                ml: 2,
-              }}
-            >
-              <InputLabel id="select-operator">Operator</InputLabel>
-
-              <Select
-                labelId="select-operator"
-                disabled={!enableUpdate}
-                sx={{
-                  width: '10rem',
-                }}
-                {...register('operator')}
-              >
-                {operators.map((op) => (
-                  <MenuItem key={op} value={op}>
-                    {formatOperator(op)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <TextField
-              label="Temperature"
-              disabled={!enableUpdate}
-              sx={{ width: '10rem', ml: 2 }}
-              error={!!errors.temperature}
-              helperText={errors.temperature?.message}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">℃</InputAdornment>,
-              }}
-              {...register('temperature')}
-            />
-          </>
-        )}
-
+        <CompleteText />
         <Button
           variant="contained"
-          color={enableUpdate ? 'success' : 'warning'}
+          color="warning"
           onClick={handleClickToggleEnableUpdate}
-          type={enableUpdate ? 'button' : 'submit'}
           disabled={!alertQuery.isSuccess}
           sx={{
             ml: 2,
           }}
         >
-          {enableUpdate ? 'Save Changes' : 'Modify Alert'}
+          Modify Alert
         </Button>
       </Stack>
+    );
+
+  return (
+    <form onSubmit={handleSubmit(handleClickSubmit)}>
+      <Grid
+        container
+        width="40rem"
+        sx={{ marginX: 'auto' }}
+        alignItems="center"
+        gap={1}
+        mt={2}
+        gridTemplateColumns="repeat(auto, 3)"
+      >
+        <Grid item xs={4}>
+          <Typography textAlign="right">Notify when temperature is </Typography>
+        </Grid>
+        <Grid item xs="auto">
+          <FormControl
+            sx={{
+              ml: 2,
+            }}
+          >
+            <InputLabel id="select-operator">Operator</InputLabel>
+
+            <Select
+              labelId="select-operator"
+              sx={{
+                width: '10rem',
+              }}
+              {...register('operator')}
+            >
+              {operators.map((op) => (
+                <MenuItem key={op} value={op}>
+                  {formatOperator(op)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={4}>
+          <TextField
+            label="Temperature"
+            sx={{ width: '10rem', ml: 2 }}
+            error={!!errors.temperature}
+            helperText={errors.temperature?.message}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">℃</InputAdornment>,
+            }}
+            {...register('temperature')}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Typography textAlign="right">and check every</Typography>
+        </Grid>
+        <Grid item xs="auto">
+          <TextField
+            label="Frequency"
+            sx={{ width: '10rem', ml: 2 }}
+            error={!!errors.checkFrequency}
+            helperText={errors.checkFrequency?.message}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">ms</InputAdornment>,
+            }}
+            {...register('checkFrequency')}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Button
+            variant="contained"
+            color="success"
+            type="submit"
+            disabled={!alertQuery.isSuccess}
+            sx={{
+              ml: 2,
+            }}
+          >
+            Save Changes
+          </Button>
+        </Grid>
+      </Grid>
     </form>
   );
 }
