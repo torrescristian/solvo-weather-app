@@ -15,7 +15,8 @@ export default function AlertMenuButton() {
   const fcwq = useFavoriteCitiesWeatherQuery();
   const alertQuery = useAlertQuery();
   const [alerts, setAlerts] = useState<string[]>([]);
-  const [myInterval, setMyInterval] = useState<number>(0);
+
+  const [myInterval, setMyInterval] = useState<NodeJS.Timer | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -57,23 +58,27 @@ export default function AlertMenuButton() {
         )} ${temperature}℃ at ${new Date().toLocaleTimeString()}`;
       });
 
-    setAlerts(prevAlerts => newAlerts.concat(prevAlerts));
+    setAlerts((prevAlerts) => newAlerts.concat(prevAlerts));
   };
 
   useEffect(() => {
     if (!alertQuery.data) return;
-    
+
     if (myInterval) {
       clearInterval(myInterval);
     }
 
     const _interval = setInterval(() => {
       updateAlertsNotifications();
-    }, alertQuery.data.checkFrequency)
+    }, alertQuery.data.checkFrequency);
 
     setMyInterval(_interval);
-    
-    return clearInterval(myInterval);
+
+    return () => {
+      if (myInterval) {
+        clearInterval(myInterval);
+      }
+    };
   }, [fcwq.data, fcq.data, alertQuery.data]);
 
   return (

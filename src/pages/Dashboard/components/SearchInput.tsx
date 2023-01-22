@@ -1,10 +1,4 @@
-import {
-  Button,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Button, MenuItem, Select, Stack, TextField } from '@mui/material';
 
 import countryIsoCodes from '../../../state/countryISOCodes';
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,7 +11,6 @@ import fetchGeocoding, {
 import fetchWeather from '../../../state/services/fetchWeather';
 import { useState } from 'react';
 import IWeather from '../../../state/interfaces/IWeather';
-
 
 export const useSearch = () => {
   const [weather, setWeather] = useState<IWeather | null>(null);
@@ -60,40 +53,47 @@ export const useSearch = () => {
   };
 };
 
-type IProps = Pick<ReturnType<typeof useSearch>, 'errors' | 'handleSubmit' | 'register'>
+type IProps = Pick<
+  ReturnType<typeof useSearch>,
+  'errors' | 'handleSubmit' | 'register'
+>;
 
-export default function SearchInput({ errors, handleSubmit, register }: IProps) {
+export default function SearchInput({
+  errors,
+  handleSubmit,
+  register,
+}: IProps) {
   return (
     <form onSubmit={handleSubmit}>
-        <Stack p={2} marginX="auto" width="40rem" flexDirection="row">
-          <Select
-            {...register('countryCode')}
-            defaultValue={countryIsoCodes[0].alpha2Code}
-            error={!!errors.countryCode}
-            sx={{ height: 'fit-content' }}
-          >
-            {countryIsoCodes.map((code) => (
-              <MenuItem key={code.alpha2Code} value={code.alpha2Code}>
-                {code.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <TextField
-            label="Search by zipcode or city name"
-            fullWidth
-            {...register('query')}
-            error={!!errors.query}
-            helperText={errors.query?.message}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            sx={{ flexShrink: 0, height: 'fit-content' }}
-          >
-            Search
-          </Button>
-        </Stack>
-      </form>
-  )
+      <Stack p={2} marginX="auto" width="40rem" flexDirection="row">
+        <Select
+          {...register('countryCode')}
+          defaultValue={countryIsoCodes[0].alpha2Code}
+          error={!!errors.countryCode}
+          sx={{ height: 'fit-content' }}
+        >
+          {countryIsoCodes.map((code) => (
+            <MenuItem key={code.alpha2Code} value={code.alpha2Code}>
+              {code.name}
+            </MenuItem>
+          ))}
+        </Select>
+        <TextField
+          label="Search by zipcode or city name"
+          fullWidth
+          {...register('query')}
+          error={!!errors.query}
+          helperText={errors.query?.message}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          startIcon={<SearchIcon />}
+          sx={{ flexShrink: 0, height: 'fit-content' }}
+        >
+          Search
+        </Button>
+      </Stack>
+    </form>
+  );
 }
